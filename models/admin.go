@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"log"
 
 	"go-jwt/forms"
 	"go-jwt/interfaces"
@@ -13,12 +14,18 @@ func NewServiceAdmin() (service interfaces.ServiceAdmin) {
 
 type crud struct{}
 
-func (crud *crud) Create(data *string) (err error) {
-	err = errors.New("Error")
-	return err
+func (crud *crud) Create(input *forms.AdminCreateInput) (res *forms.AdminCreateInput, err error) {
+	// Create Data to Database
+	log.Println("Create Success !")
+	return input, nil
 }
 
-func (crud *crud) Read() (admin []*forms.Admin) {
+func (crud *crud) Read() (admin *forms.Admin) {
+	return admin
+}
+
+func (crud *crud) List() (admin []*forms.Admin) {
+	// Query data from database
 	return []*forms.Admin{
 		{
 			Name:  "Test1",

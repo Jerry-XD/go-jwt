@@ -1,5 +1,11 @@
 package controller
 
-import "go-jwt/models"
+import (
+	"go-jwt/models"
+	"go-jwt/util"
+)
 
-var modelAdmin = models.NewServiceAdmin()
+var (
+	modelAdmin = models.NewServiceAdmin()
+	jwt        = util.NewJWT()
+)

@@ -2,11 +2,9 @@ package routes
 
 import (
 	"fmt"
-	"log"
 
 	"go-jwt/config"
 	"go-jwt/controller"
-	"go-jwt/forms"
 	"go-jwt/middlewares"
 
 	"github.com/gin-gonic/gin"
@@ -41,33 +39,23 @@ func init() {
 	groupAdmin := router.Group("/admin")
 
 	// Authentication
-	groupAdmin.POST("/login", func(c *gin.Context) {
-		inp := &forms.LoginInput{}
-		if err := c.ShouldBindJSON(inp); err != nil {
-			log.Println(err)
-			return
-		}
-		accessToken, err := middleware.GetAdminAccessToken(inp)
-		refreshToken, err := middleware.GetAdminRefreshToken(inp)
-		log.Println(accessToken)
-		log.Println(refreshToken)
-		log.Println(err)
-
-		c.JSON(200, gin.H{
-			"message":       "Login Success !",
-			"access_token":  accessToken,
-			"refresh_token": refreshToken,
-		})
-	})
+	groupAdmin.POST("/login", r.admin.Login)
 
 	// Route admin
 	admin := groupAdmin.Group("", middlewareAccesTokenAdmin, middleware.CheckAccessTokenAdmin())
 	{
-		admin.GET("/data", r.admin.Read)
+		admin.POST("/data", r.admin.Create)
+		admin.GET("/data/:id", r.admin.Read)
+		admin.GET("/data", r.admin.List)
+		admin.PUT("/data", r.admin.Update)
+		admin.DELETE("/data", r.admin.Delete)
 	}
 
 }
 
 func Start() {
-	_ = router.Run(fmt.Sprintf(":%s", conf.App.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	err := router.Run(fmt.Sprintf(":%s", conf.App.Port)) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	if err != nil {
+		panic(err)
+	}
 }

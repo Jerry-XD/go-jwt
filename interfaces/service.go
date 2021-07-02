@@ -3,8 +3,9 @@ package interfaces
 import "go-jwt/forms"
 
 type ServiceAdmin interface {
-	Create(data *string) (err error)
-	Read() (admin []*forms.Admin)
+	Create(input *forms.AdminCreateInput) (res *forms.AdminCreateInput, err error)
+	Read() (admin *forms.Admin)
+	List() (admin []*forms.Admin)
 	Update(data string) (result string)
 	Delete(data string) (err error)
 }
