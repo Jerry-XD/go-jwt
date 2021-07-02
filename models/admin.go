@@ -1,21 +1,13 @@
-package class
+package models
 
-import "errors"
+import (
+	"errors"
 
-type ServiceUser interface {
-	Create(data *string) (err error)
-	Read() (user []*User)
-	Update(data string) (result string)
-	Delete(data string) (err error)
-}
+	"go-jwt/forms"
+	"go-jwt/interfaces"
+)
 
-type User struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Age   int64  `json:"age"`
-}
-
-func NewServiceUser() (service ServiceUser) {
+func NewServiceAdmin() (service interfaces.ServiceAdmin) {
 	return &crud{}
 }
 
@@ -26,8 +18,8 @@ func (crud *crud) Create(data *string) (err error) {
 	return err
 }
 
-func (crud *crud) Read() (user []*User) {
-	return []*User{
+func (crud *crud) Read() (admin []*forms.Admin) {
+	return []*forms.Admin{
 		{
 			Name:  "Test1",
 			Email: "gmail.com",
