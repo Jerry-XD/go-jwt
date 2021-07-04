@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"errors"
-	"log"
 	"net/http"
 
 	"go-jwt/config"
@@ -25,16 +24,13 @@ func (m *Middleware) AccessTokenAdmin() gin.HandlerFunc {
 
 func (m *Middleware) CheckAccessTokenAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.Request.Header.Get("Authorization")
-		log.Println(token)
-		//test := jwt.GetToken(c)
-		test := "role"
-		role := m.GetClaimToken(c, test)
-		//log.Println("role :", role)
-		//log.Println("Token :", token)
+		//token := c.Request.Header.Get("Authorization")
+		//log.Println(token)
 
-		if role != "admin" {
-			_ = c.AbortWithError(200, errors.New(http.StatusText(http.StatusOK)))
+		res := m.GetClaimToken(c, "role")
+		//log.Println("role :", res)
+		if res != "admin" {
+			_ = c.AbortWithError(http.StatusUnauthorized, errors.New(http.StatusText(http.StatusOK)))
 		}
 	}
 }

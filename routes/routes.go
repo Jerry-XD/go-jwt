@@ -15,18 +15,22 @@ type Route struct {
 }
 
 var (
-	r                         Route
-	conf                      = *config.New()
-	middleware                = new(middlewares.Middleware)
-	middlewareAccesTokenAdmin gin.HandlerFunc
-	router                    *gin.Engine
+	r                          Route
+	conf                       = *config.New()
+	middleware                 = new(middlewares.Middleware)
+	middlewareAccessTokenAdmin gin.HandlerFunc
+	router                     *gin.Engine
 )
+
+func NewRouter() *gin.Engine {
+	return router
+}
 
 func init() {
 	router = gin.Default()
 
 	// middleware
-	middlewareAccesTokenAdmin = middleware.AccessTokenAdmin()
+	middlewareAccessTokenAdmin = middleware.AccessTokenAdmin()
 
 	// Status check
 	router.GET("/status", func(c *gin.Context) {
@@ -42,7 +46,7 @@ func init() {
 	groupAdmin.POST("/login", r.admin.Login)
 
 	// Route admin
-	admin := groupAdmin.Group("", middlewareAccesTokenAdmin, middleware.CheckAccessTokenAdmin())
+	admin := groupAdmin.Group("", middlewareAccessTokenAdmin, middleware.CheckAccessTokenAdmin())
 	{
 		admin.POST("/data", r.admin.Create)
 		admin.GET("/data/:id", r.admin.Read)

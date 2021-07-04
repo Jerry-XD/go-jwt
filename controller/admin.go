@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"log"
+
 	"go-jwt/controller/view"
 	"go-jwt/forms"
 
@@ -26,7 +28,14 @@ func (a *AdminController) Create(c *gin.Context) {
 }
 
 func (a *AdminController) Read(c *gin.Context) {
-	data := modelAdmin.Read()
+	id := c.Param("id")
+	log.Println(id)
+	data, err := modelAdmin.Read(&id)
+	if err != nil {
+		view.MakeErrorResp(c, err)
+		return
+	}
+
 	view.MakeReadSuccessResp(c, data)
 }
 
