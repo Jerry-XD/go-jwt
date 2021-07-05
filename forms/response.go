@@ -11,7 +11,8 @@ type LoginResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-type ReadResponse struct {
-	Message *string     `json:"message"`
-	Data    interface{} `json:"data"`
+type ListResponse struct {
+	Code    string  `json:"code"`
+	Message string  `json:"message"`
+	Data    []Admin `json:"data"`
 }

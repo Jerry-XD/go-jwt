@@ -11,6 +11,8 @@ import (
 
 	"go-jwt/forms"
 	"go-jwt/routes"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 var (
@@ -35,5 +37,48 @@ func TestCreate(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Error(fmt.Sprintf("Error http code => expected: %d | actual: %d", http.StatusOK, rec.Code))
 	}
-	log.Println(rec)
+}
+
+func TestGetList(t *testing.T) {
+	var listDataExpected = []forms.Admin{
+		{
+			ID:    "1",
+			Name:  "Test1",
+			Email: "gmail.com",
+			Age:   10,
+		},
+		{
+			ID:    "2",
+			Name:  "Test2",
+			Email: "gmail.com",
+			Age:   20,
+		},
+		{
+			ID:    "3",
+			Name:  "Test3",
+			Email: "gmail.com",
+			Age:   30,
+		},
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/admin/data", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Error(fmt.Sprintf("Error http code => expected: %d | actual: %d", http.StatusOK, rec.Code))
+	}
+
+	res := &forms.ListResponse{}
+	_ = json.Unmarshal(rec.Body.Bytes(), &res)
+
+	for _, v := range res.Data {
+		log.Println(v)
+	}
+
+	if !cmp.Equal(listDataExpected, res.Data) {
+		t.Error(fmt.Sprintf("Error get data => expected: %+v | actual: %+v", listDataExpected, res.Data))
+	}
+
 }
